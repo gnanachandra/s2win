@@ -91,6 +91,22 @@ const AddBranch = ({ open, handleOpen }) => {
               })}
             />
             <Input
+              label="Per Student Amount"
+              {...register("perStudentAmount", {
+                required: {
+                  value: true,
+                  message: "Enter per Student Amount",
+                },
+                validate: {
+                  isNumber: (fieldValue) => {
+                    return (
+                      Number(fieldValue) || "Enter a valid per student Amount"
+                    );
+                  },
+                },
+              })}
+            />
+            <Input
               label="LoginID"
               {...register("loginID", {
                 required: {

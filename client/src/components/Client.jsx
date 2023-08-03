@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getClient } from "../redux/userSlice";
 import Loading from "./Loading";
-import { Button, Typography } from "@material-tailwind/react";
+import { Button, Card, Typography } from "@material-tailwind/react";
 import AddBranch from "./AddBranch";
+import { TrashIcon } from "@heroicons/react/24/solid";
+import DeleteBranchDialog from "./dialogs/DeleteBranchDialog";
 const TABLE_HEAD = [
   "Branch ID",
   "Branch Name",
@@ -12,16 +14,29 @@ const TABLE_HEAD = [
   "Strength",
   "Login ID",
   "Password",
+  "Per Student Amount",
+  "Amount",
+  "Amount Paid",
+  "Payments",
+  "Action",
 ];
 const Client = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
+
+  const [openWarning, setOpenWarning] = useState(false);
+  const handleOpenWarning = () => setOpenWarning(!openWarning);
+
   const { id } = useParams();
   const { isLoading, client } = useSelector((state) => state["user"]);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getClient({ id: id }));
   }, []);
+
+  //branch name and id to show the warning
+  const [branchName, setBranchName] = useState("");
+  const [branchId, setBranchId] = useState("");
   if (isLoading) {
     return <Loading />;
   }
@@ -33,14 +48,14 @@ const Client = () => {
         <p className="text-lg">Client Contact : {client?.contact}</p>
       </div>
       <div className="flex justify-end">
-          <Button
-            className="bg-deep-orange-600 capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
-            onClick={handleOpen}
-          >
-            Add Branch
-          </Button>
-        </div>
-      <div>
+        <Button
+          className="bg-deep-orange-600 capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
+          onClick={handleOpen}
+        >
+          Add Branch
+        </Button>
+      </div>
+      <Card className="h-full w-full overflow-x-scroll lg:overflow-hidden rounded-none mt-10 shadow-none">
         {
           <table className="w-full min-w-max table-auto text-left border border-gray-700 mt-5 overflow-auto">
             <thead>
@@ -63,7 +78,17 @@ const Client = () => {
             <tbody>
               {client?.branches?.map(
                 (
-                  { _id, name, contact, branchStrength, loginID, password },
+                  {
+                    _id,
+                    name,
+                    contact,
+                    branchStrength,
+                    loginID,
+                    password,
+                    perStudentAmount,
+                    amountPaid,
+                    amount,
+                  },
                   index
                 ) => (
                   <tr key={_id} className="even:bg-blue-gray-50/50">
@@ -121,14 +146,63 @@ const Client = () => {
                         {password}
                       </Typography>
                     </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-medium"
+                      >
+                        {perStudentAmount.toLocaleString()}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-medium"
+                      >
+                        {amount.toLocaleString()}
+                      </Typography>
+                    </td>
+
+                    <td className="p-4">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-medium"
+                      >
+                        {amountPaid.toLocaleString()}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Link to={`/branches/${_id}`}>
+                        <Button>View</Button>
+                      </Link>
+                    </td>
+                    <td className="p-4">
+                      <TrashIcon
+                        className="h-8 w-8 text-red-500 cursor-pointer hover:text-red-800"
+                        onClick={() => {
+                          setBranchName(name),
+                            setBranchId(_id),
+                            handleOpenWarning();
+                        }}
+                      />
+                    </td>
                   </tr>
                 )
               )}
             </tbody>
           </table>
         }
-      </div>
-      <AddBranch open={open} handleOpen={handleOpen}/>
+      </Card>
+      <AddBranch open={open} handleOpen={handleOpen} />
+      <DeleteBranchDialog
+        open={openWarning}
+        handleOpen={handleOpenWarning}
+        branchName={branchName}
+        id={branchId}
+      />
     </div>
   );
 };

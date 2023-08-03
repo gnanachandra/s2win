@@ -81,7 +81,7 @@ const AddClient = ({ open, handleOpen }) => {
                 },
               })}
             />
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <label htmlFor="hasBranches">Has Branches</label>
               <input
                 type="radio"

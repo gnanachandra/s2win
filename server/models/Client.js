@@ -8,10 +8,12 @@ const ClientSchema = new mongoose.Schema(
     contact: {
       type: String,
       required: [true, "Contact number is required"],
+      unique : true
     },
     url: {
       type: String,
       required: "Client URL is required",
+      unique : true
     },
     hasBranches: {
       type: String,
@@ -28,6 +30,23 @@ const ClientSchema = new mongoose.Schema(
     },
   }
 );
+
+ClientSchema.virtual("branchesCount").get(function () {
+  return this.branches?.length || 0
+});
+
+ClientSchema.virtual("totalStrength").get(function () {
+  return this.branches?.reduce((total, branch) => total + branch.branchStrength, 0);
+});
+
+ClientSchema.virtual("totalAmountPaid").get(function () {
+  return this.branches?.reduce((total, branch) => total + branch.amountPaid || 0, 0);
+});
+
+ClientSchema.virtual("totalAmount").get(function () {
+  return this.branches?.reduce((total, branch) => total + branch.amount || 0, 0);
+});
+
 
 ClientSchema.virtual("branches", {
   ref: "Branch",
