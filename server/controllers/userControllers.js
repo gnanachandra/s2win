@@ -4,6 +4,8 @@ import asyncHandler from "express-async-handler"
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import Payment from "../models/Payment.js";
+import bcrypt from "bcrypt"
+import User from "../models/User.js";
 // client
 // create = add new client
 // read ( get all client + get each client)
@@ -146,13 +148,13 @@ export const getBranch = asyncHandler(async(req,res)=>{
 //payment
 
 export const addPayment = asyncHandler(async(req,res)=>{
-  const {branch,client,amount,mode,date} = req.body;
-  if(!branch || !client || !amount || !mode || !date) {
+  const {branch,amount,mode,date} = req.body;
+  if(!branch || !amount || !mode || !date) {
     throw new Error("Fill all details",StatusCodes.BAD_REQUEST);
   } 
   const newPayment = await Payment.create(req.body);
-  const payments = await Payment.find({branch : branch}).sort({date : -1});
-  return res.status(StatusCodes.OK).json({message : `Payment has been added to branch ${branch.name}`,payments})
+  const data = await Branch.findById(branch).populate({path : "payments",options: { sort: { date: -1 } }})
+  return res.status(StatusCodes.OK).json({message : `Payment has been added to branch ${branch.name}`,branch:data})
 })
 
 export const deletePayment = asyncHandler(async(req,res)=>{
@@ -167,8 +169,8 @@ export const deletePayment = asyncHandler(async(req,res)=>{
     throw new Error("Payment details not found",StatusCodes.NOT_FOUND);
   }
   const response = await findByIdAndDelete(paymentId);
-  const payments = await Payment.find({branch : response.branch}).sort({date : -1});
-  return res.status(StatusCodes.OK).json({message : `Payment with id ${response.id} has been deleted`})
+  const data = await Branch.findById(branch).populate({path : "payments",options: { sort: { date: -1 } }})
+  return res.status(StatusCodes.OK).json({message : `Payment with id ${response.id} has been deleted`,branch : data})
 })
 
 export const getPayments = asyncHandler(async(req,res)=>{
@@ -182,3 +184,40 @@ export const getPayments = asyncHandler(async(req,res)=>{
 })
 
 
+export const login = asyncHandler(async(req,res)=>{
+  const {email, password} = req.body;
+  if(!email || !password){
+      throw new Error("Enter all details",StatusCodes.BAD_REQUEST);
+  }
+  const user = await User.findOne({email});
+  if(!user)
+  {
+      throw new Error("User Not found",StatusCodes.NOT_FOUND);
+  }
+  const match = await user.comparePassword(password);
+  if(!match)
+  {
+      throw new Error("Invalid credentials",StatusCodes.UNAUTHORIZED);
+  }
+  const accessToken = await user.createAccessToken();
+  return res.status(StatusCodes.OK).json({ message : "Login successful", accessToken : accessToken , user  })
+})
+
+export const addUser = asyncHandler(async (req, res) => {
+  const {  email, password,  } = req.body;
+  if ( !email || !password) {
+    throw new Error("Fill all details", StatusCodes.BAD_REQUEST);
+  }
+  const isUser = await User.findOne({ email });
+  if (isUser) {
+    throw new Error("User already exists", StatusCodes.CONFLICT);
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  req.body.password = hashedPassword;
+  const newUser = await User.create(req.body);
+  return res
+    .status(StatusCodes.OK)
+    .json({
+      message: `New user added`,
+    });
+});

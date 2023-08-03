@@ -47,7 +47,7 @@ const Client = () => {
         <p className="text-lg">Client Name : {client?.name}</p>
         <p className="text-lg">Client Contact : {client?.contact}</p>
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-4">
         <Button
           className="bg-deep-orange-600 capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
           onClick={handleOpen}
@@ -55,7 +55,7 @@ const Client = () => {
           Add Branch
         </Button>
       </div>
-      <Card className="h-full w-full overflow-x-scroll lg:overflow-hidden rounded-none mt-10 shadow-none">
+      <Card className="h-full w-full overflow-x-scroll lg:overflow-hidden rounded-none shadow-none">
         {
           <table className="w-full min-w-max table-auto text-left border border-gray-700 mt-5 overflow-auto">
             <thead>

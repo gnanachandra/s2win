@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getBranch } from "../redux/userSlice";
 import Loading from "./Loading";
 import { Button, Card, Typography } from "@material-tailwind/react";
+import AddPayment from "./AddPayment";
+import { formatDate } from "../utils/formatDate";
 
 const TABLE_HEAD = ["Payment ID", "Amount", "Payment Mode", "Date"];
 
@@ -93,7 +95,7 @@ const Branch = () => {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {date}
+                      {formatDate(date)}
                     </Typography>
                   </td>
                   
@@ -105,6 +107,7 @@ const Branch = () => {
           </table>
         }
       </Card>
+      <AddPayment open={open} handleOpen={handleOpen}/>
     </div>
   );
 };

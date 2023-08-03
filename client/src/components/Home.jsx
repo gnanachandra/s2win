@@ -45,7 +45,7 @@ const Home = () => {
         <h1 className="text-gray-700 text-center font-bold text-lg lg:text-xl">
           Clients Details
         </h1>
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-2">
           <Button
             className="bg-deep-orange-600 capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
             onClick={handleOpenAddClient}
@@ -54,7 +54,7 @@ const Home = () => {
           </Button>
         </div>
 
-        <Card className="h-full w-full overflow-x-scroll lg:overflow-hidden rounded-none mt-10 shadow-none">
+        <Card className="h-full w-full overflow-x-scroll lg:overflow-hidden rounded-none shadow-none">
           <table className="w-full min-w-max table-auto text-left border border-gray-700 mt-5">
             <thead className="">
               <tr className="border border-gray-900">

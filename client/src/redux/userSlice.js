@@ -10,6 +10,7 @@ export const getClients = createAsyncThunk(
       const response = await axios.get("/api/user/clients", {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       return response.data;
@@ -30,6 +31,7 @@ export const getClient = createAsyncThunk(
       const response = await axios.get(`/api/user/clients/${payload.id}`, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       return response.data;
@@ -50,6 +52,7 @@ export const addClient = createAsyncThunk(
       const response = await axios.post(`/api/user/clients`, payload, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       return response.data;
@@ -70,6 +73,7 @@ export const deleteClient = createAsyncThunk(
       const response = await axios.delete(`/api/user/clients/${payload.id}`, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       return response.data;
@@ -90,6 +94,7 @@ export const addBranch = createAsyncThunk(
       const response = await axios.post(`/api/user/branches`, payload, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       return response.data;
@@ -109,6 +114,7 @@ export const getBranch = createAsyncThunk(
       const response = await axios.get(`/api/user/branches/${payload.id}`, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       return response.data;
@@ -128,6 +134,7 @@ export const deleteBranch = createAsyncThunk(
       const response = await axios.delete(`/api/user/branches/${payload.id}`, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       return response.data;
@@ -140,17 +147,73 @@ export const deleteBranch = createAsyncThunk(
   }
 );
 
+export const addPayment = createAsyncThunk(
+  "/api/user/payments",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/api/user/payments", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      return response.data;
+    } catch (err) {
+      if (!err?.response) {
+        throw err;
+      }
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
+export const userLogin = createAsyncThunk(
+  "/api/user/login",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("/api/user/login", payload,{
+        headers : {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      });
+      return response.data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+const token = localStorage.getItem("token")
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    token : token,
     user: {},
     clients: [],
     client: {},
-    branch : {},
+    branch: {},
     isLoading: false,
   },
   reducers: {},
   extraReducers: (builder) => {
+
+    builder.addCase(userLogin.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(userLogin.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      localStorage.setItem("token", payload.accessToken);
+      state.token = payload.accessToken;
+      toast.success(payload.message);
+    });
+    builder.addCase(userLogin.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload.message);
+    });
     builder.addCase(getClients.pending, (state) => {
       state.isLoading = true;
     });
@@ -241,6 +304,18 @@ const userSlice = createSlice({
       state.isLoading = false;
       toast.error(payload?.message || "Unable to delete branch details");
     });
+
+    builder.addCase(addPayment.pending,(state)=>{
+      state.isLoading = true;
+    });
+    builder.addCase(addPayment.fulfilled,(state,{payload})=>{
+      state.isLoading = false;
+      state.branch = payload.branch;
+    })
+    builder.addCase(addPayment.rejected,(state,{payload})=>{
+      state.isLoading = false;
+      toast.error(payload?.message || "Unable to add payment")
+    })
   },
 });
 

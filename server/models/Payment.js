@@ -5,11 +5,6 @@ const PaymentSchema = new mongoose.Schema({
     ref: "Branch",
     required: [true, "Branch details cannot be empty"],
   },
-  client: {
-    type: mongoose.SchemaTypes.ObjectId,
-    ref : "Client",
-    required: [true, "Client details cannot be empty"],
-  },
   amount: {
     type: Number,
     required: [true, "Amount cannot be empty"],

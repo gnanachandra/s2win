@@ -3,6 +3,7 @@ import {
   addBranch,
   addClient,
   addPayment,
+  addUser,
   deleteBranch,
   deleteClient,
   deletePayment,
@@ -11,10 +12,15 @@ import {
   getClient,
   getClients,
   getPayments,
+  login,
   updateBranch,
 } from "../controllers/userControllers.js";
+import { isAuthenticated } from "../middleware/verifyJWT.js";
 const router = express.Router();
 
+router.route("/login").post(login)
+router.route('/users').post(addUser);
+router.use(isAuthenticated)
 router.route("/clients").get(getClients).post(addClient);
 router.route("/clients/:id").delete(deleteClient).get(getClient);
 
