@@ -4,6 +4,11 @@ import connectDB from "./db/connectDB.js";
 import dotenv from "dotenv";
 import { ErrorMiddleWare } from "./middleware/error.js";
 import userRouter from "./routes/userRoutes.js"
+import { dirname, join} from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -12,10 +17,10 @@ app.use("*",cors({
   credentials : true
 }))
 app.use(express.json());
-
+app.use(express.static(join(__dirname,'../client/dist/')));
 
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "task-1 s2win" });
+  res.sendFile(join(__dirname,'../client/dist/index.html'));
 });
 
 app.use("/api/user",userRouter);

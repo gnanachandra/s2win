@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../api/axios";
+import axios from "axios"
 import { toast } from "react-hot-toast";
 
 //getclients
@@ -13,6 +13,7 @@ export const getClients = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+      
       return response.data;
     } catch (err) {
       if (!err?.response) {
