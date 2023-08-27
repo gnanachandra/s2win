@@ -38,8 +38,7 @@ const DeleteBranchDialog = ({ open, handleOpen, branchName, id }) => {
             </span>
           </p>
           <p className="mt-4">
-            Deleting this branch will delete all the details and Payments
-            related to this branch
+            This action is irreversible !
           </p>
         </DialogBody>
         <DialogFooter>

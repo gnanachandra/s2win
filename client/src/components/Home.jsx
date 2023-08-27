@@ -6,7 +6,7 @@ import { getClients } from "../redux/userSlice";
 import { Button, Card, Typography } from "@material-tailwind/react";
 import AddClient from "./AddClient";
 import { Link } from "react-router-dom";
-import {TrashIcon} from "@heroicons/react/24/solid"
+import { TrashIcon } from "@heroicons/react/24/solid";
 import DeleteClientDialog from "./dialogs/DeleteClientDialog";
 
 const TABLE_HEAD = [
@@ -14,22 +14,28 @@ const TABLE_HEAD = [
   "Client Name",
   "Contact",
   "URL",
-  "Count",
+  "Login ID",
+  "Password",
+  "Branches Count",
   "Total Strength",
+  "Per Student Amount",
   "Total Amount",
   "Amount Paid",
   "Branches",
+  "Payments",
+  "Login",
+  "Actions",
 ];
 const Home = () => {
   const [openAddClient, setAddClientOpen] = React.useState(false);
   const handleOpenAddClient = () => setAddClientOpen(!openAddClient);
 
-  const [openWarning,setOpenWarning] = React.useState(false);
+  const [openWarning, setOpenWarning] = React.useState(false);
   const handleOpenWarning = () => setOpenWarning(!openWarning);
 
   //to display the client name in the dialog
-  const [clientName,setClientName] = useState("")
-  const [clientId,setClientId] = useState("");
+  const [clientName, setClientName] = useState("");
+  const [clientId, setClientId] = useState("");
 
   const { isLoading, clients } = useSelector((state) => state["user"]);
   const dispatch = useDispatch();
@@ -39,6 +45,7 @@ const Home = () => {
   if (isLoading) {
     return <Loading />;
   }
+  console.log(clients);
   return (
     <>
       <div className="p-4 md:p-10">
@@ -54,7 +61,7 @@ const Home = () => {
           </Button>
         </div>
 
-        <Card className="h-full w-full overflow-x-scroll lg:overflow-hidden rounded-none shadow-none">
+        <Card className="h-full w-full overflow-x-scroll lg:overflow-auto rounded-none shadow-none">
           <table className="w-full min-w-max table-auto text-left border border-gray-700 mt-5">
             <thead className="">
               <tr className="border border-gray-900">
@@ -82,8 +89,11 @@ const Home = () => {
                     name,
                     contact,
                     url,
+                    loginId,
+                    password,
                     branchesCount,
                     totalStrength,
+                    perStudentAmount,
                     totalAmount,
                     totalAmountPaid,
                     hasBranches,
@@ -133,6 +143,24 @@ const Home = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
+                        {loginId}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {password}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
                         {branchesCount}
                       </Typography>
                     </td>
@@ -142,7 +170,7 @@ const Home = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {totalStrength.toLocaleString()}
+                        {totalStrength?.toLocaleString()}
                       </Typography>
                     </td>
                     <td className="p-4">
@@ -151,7 +179,16 @@ const Home = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {totalAmount.toLocaleString()}
+                        {perStudentAmount?.toLocaleString()}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {totalAmount?.toLocaleString()}
                       </Typography>
                     </td>
                     <td className="p-4">
@@ -163,25 +200,54 @@ const Home = () => {
                         {totalAmountPaid.toLocaleString()}
                       </Typography>
                     </td>
-                    
+
                     {hasBranches === "yes" ? (
-                      <td className="p-4 flex items-center gap-4 ">
+                      <td className="p-4">
                         <Link to={`/clients/${_id}`}>
                           <Button className="w-fit">View</Button>
                         </Link>
-                        <TrashIcon className="h-8 w-8 text-red-500 cursor-pointer hover:text-red-800" onClick={()=>{setClientName(name),setClientId(_id),handleOpenWarning()}}/>
                       </td>
                     ) : (
-                      <td className="p-4">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-medium"
-                        >
-                          No Branches
-                        </Typography>
-                      </td>
+                      <>
+                        <td className="p-4">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-medium"
+                          >
+                            No Branches
+                          </Typography>
+                        </td>
+                      </>
                     )}
+                    <td className="p-4">
+                      <Link to={`/payments/${_id}`}>
+                        <Button className="bg-green-400 hover:shadow-green-400 hover:shadow-sm">
+                          View
+                        </Button>
+                      </Link>
+                    </td>
+                    <td className="p-4 ">
+                      {hasBranches === "no" ?(
+                        <a href={url} target="_blank" rel="noreferrer">
+                          <Button className="bg-cyan-700 p-3 hover:shadow-cyan-600 hover:shadow-sm">
+                            Login
+                          </Button>
+                        </a>
+                      ) : (
+                        <p className="flex items-center justify-center">NA</p>
+                      )}
+                    </td>
+                    <td>
+                      <TrashIcon
+                        className="h-8 w-8 text-red-500 cursor-pointer hover:text-red-800 place-items-center ml-4"
+                        onClick={() => {
+                          setClientName(name),
+                            setClientId(_id),
+                            handleOpenWarning();
+                        }}
+                      />
+                    </td>
                   </tr>
                 )
               )}
@@ -190,7 +256,12 @@ const Home = () => {
         </Card>
       </div>
       <AddClient open={openAddClient} handleOpen={handleOpenAddClient} />
-      <DeleteClientDialog open={openWarning} handleOpen={handleOpenWarning} clientName={clientName} id={clientId}/>
+      <DeleteClientDialog
+        open={openWarning}
+        handleOpen={handleOpenWarning}
+        clientName={clientName}
+        id={clientId}
+      />
     </>
   );
 };

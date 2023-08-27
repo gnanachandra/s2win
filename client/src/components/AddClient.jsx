@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Dialog,
@@ -81,6 +81,46 @@ const AddClient = ({ open, handleOpen }) => {
                 },
               })}
             />
+            <Input
+              label="LoginId"
+              {...register("loginId", {
+                required: {
+                  value: true,
+                  message: "Enter Login ID",
+                },
+              })}
+            />
+            <Input
+              label="Password"
+              {...register("password", {
+                required: {
+                  value: true,
+                  message: "Enter client Password",
+                },
+              })}
+            />
+            <Input
+              label="Per Student Amount"
+              defaultValue={0}
+              onChange={(e)=>console.log(e.target.value)}
+              {...register("perStudentAmount", {
+                required: {
+                  value: true,
+                  message: "Per Student Amount is required",
+                },
+                valueAsNumber: true,
+                validate: {
+                  isNumber: (fieldValue) => {
+                    return Number(fieldValue) || "Enter a valid Amount";
+                  },
+                  isValid: (fieldValue) => {
+                    return (
+                      Number(fieldValue) > 0 || "Enter a Valid Amount (>0)"
+                    );
+                  },
+                },
+              })}
+            />
             <div className="flex gap-2 items-center">
               <label htmlFor="hasBranches">Has Branches</label>
               <input
@@ -102,6 +142,27 @@ const AddClient = ({ open, handleOpen }) => {
               />
               <label htmlFor="no">No</label>
             </div>
+            {hasBranches === "no" && (
+              <Input
+                label="Students Count"
+                defaultValue={0}
+                {...register("studentsCount", {
+                  required: {
+                    value: true,
+                    message: "Enter Students count",
+                  },
+                  valueAsNumber : true,
+                  validate: {
+                    isNumber: (fieldValue) => {
+                      return (
+                        (Number(fieldValue) && Number(fieldValue) > 0) ||
+                        "Enter valid students count"
+                      );
+                    },
+                  },
+                })}
+              />
+            )}
             <div>
               <Button
                 variant="text"

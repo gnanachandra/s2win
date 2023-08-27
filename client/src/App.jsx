@@ -15,7 +15,7 @@ const App = () => {
         <Route element={<RequireAuth />}>
           <Route path="/" element={<Home />} />
           <Route path="/clients/:id" element={<Client />} />
-          <Route path="/branches/:id" element={<Branch />} />
+          <Route path="/payments/:id" element={<Branch />} />
         </Route>
       </Routes>
       <Toaster position="top-right" />

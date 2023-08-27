@@ -15,7 +15,8 @@ export const addBranch = asyncHandler(async (req, res) => {
       throw new Error('Branch URL already registered', StatusCodes.CONFLICT);
     }
     const newBranch = await Branch.create(req.body);
-    const data = await Client.findOne({_id : req.body.client});
+    const data = await Client.findOne({_id : req.body.client}).populate(["branches","payments"]);
+    console.log(data);
     return res.status(StatusCodes.OK).json({ message: `${newBranch.name} has been added to branches list`, client:data });
   });
   
@@ -38,16 +39,15 @@ export const addBranch = asyncHandler(async (req, res) => {
   
   
   export const deleteBranch = asyncHandler(async (req, res) => {
-    const { branchId } = req.params;
-    console.log(req.params)
-    if (!mongoose.isValidObjectId(branchId)) {
-      throw new Error('Invalid branchId', StatusCodes.BAD_REQUEST);
+    const { id } = req.params;
+    if (!mongoose.isValidObjectId(id)) {
+      throw new Error('Invalid Branchid', StatusCodes.BAD_REQUEST);
     }
-    const branch = await Branch.findById(branchId);
+    const branch = await Branch.findById(id);
     if (!branch) { 
       throw new Error('Branch not found', StatusCodes.NOT_FOUND); 
     }
-    const response = await Branch.findByIdAndDelete(branchId);
+    const response = await Branch.findByIdAndDelete(id);
     const client = await Client.findById(response.client).populate(["branches","payments"])
     return res.status(StatusCodes.OK).json({message: `${branch.name} has been deleted`,client});
   });

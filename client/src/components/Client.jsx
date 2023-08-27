@@ -14,10 +14,6 @@ const TABLE_HEAD = [
   "Strength",
   "Login ID",
   "Password",
-  "Per Student Amount",
-  "Amount",
-  "Amount Paid",
-  "Payments",
   "Action",
 ];
 const Client = () => {
@@ -78,17 +74,7 @@ const Client = () => {
             <tbody>
               {client?.branches?.map(
                 (
-                  {
-                    _id,
-                    name,
-                    contact,
-                    branchStrength,
-                    loginID,
-                    password,
-                    perStudentAmount,
-                    amountPaid,
-                    amount,
-                  },
+                  { _id, name, contact, branchStrength, loginID, password },
                   index
                 ) => (
                   <tr key={_id} className="even:bg-blue-gray-50/50">
@@ -146,40 +132,13 @@ const Client = () => {
                         {password}
                       </Typography>
                     </td>
-                    <td className="p-4">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-medium"
-                      >
-                        {perStudentAmount.toLocaleString()}
-                      </Typography>
-                    </td>
-                    <td className="p-4">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-medium"
-                      >
-                        {amount.toLocaleString()}
-                      </Typography>
-                    </td>
 
-                    <td className="p-4">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-medium"
-                      >
-                        {amountPaid.toLocaleString()}
-                      </Typography>
-                    </td>
-                    <td className="p-4">
-                      <Link to={`/branches/${_id}`}>
-                        <Button>View</Button>
-                      </Link>
-                    </td>
-                    <td className="p-4">
+                    <td className="p-4 flex gap-4 items-center">
+                      <a href={client?.url} target="_blank" rel="noreferrer">
+                        <Button className="bg-cyan-700 p-2 hover:shadow-cyan-600 hover:shadow-sm">
+                          Login
+                        </Button>
+                      </a>
                       <TrashIcon
                         className="h-8 w-8 text-red-500 cursor-pointer hover:text-red-800"
                         onClick={() => {

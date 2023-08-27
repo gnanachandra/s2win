@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -23,7 +22,7 @@ const AddBranch = ({ open, handleOpen }) => {
     toast.error(errorMessages[0]?.message || Object.values(obj1)[0].message);
   }
   const dispatch = useDispatch();
-  const {id} = useParams();
+  const { id } = useParams();
   const addNewBranch = async (data) => {
     console.log(data);
     data["client"] = id;
@@ -90,22 +89,7 @@ const AddBranch = ({ open, handleOpen }) => {
                 },
               })}
             />
-            <Input
-              label="Per Student Amount"
-              {...register("perStudentAmount", {
-                required: {
-                  value: true,
-                  message: "Enter per Student Amount",
-                },
-                validate: {
-                  isNumber: (fieldValue) => {
-                    return (
-                      Number(fieldValue) || "Enter a valid per student Amount"
-                    );
-                  },
-                },
-              })}
-            />
+
             <Input
               label="LoginID"
               {...register("loginID", {
@@ -124,7 +108,7 @@ const AddBranch = ({ open, handleOpen }) => {
                 },
               })}
             />
-            
+
             <div className="flex justify-between">
               <Button
                 variant="text"

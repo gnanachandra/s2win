@@ -4,10 +4,10 @@ import { toast } from "react-hot-toast";
 
 //getclients
 export const getClients = createAsyncThunk(
-  "/api/user/clients(get)",
+  "/api/client(get)",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/user/clients", {
+      const response = await axios.get("/api/client", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -26,10 +26,10 @@ export const getClients = createAsyncThunk(
 
 //get individual client
 export const getClient = createAsyncThunk(
-  "/api/user/clients/:id(get)",
+  "/api/client/:id(get)",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/api/user/clients/${payload.id}`, {
+      const response = await axios.get(`/api/client/${payload.id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -47,10 +47,10 @@ export const getClient = createAsyncThunk(
 
 //add client
 export const addClient = createAsyncThunk(
-  "/api/user/clients/:id(post)",
+  "/api/client(post)",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`/api/user/clients`, payload, {
+      const response = await axios.post(`/api/client`, payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -68,10 +68,10 @@ export const addClient = createAsyncThunk(
 
 //delete client
 export const deleteClient = createAsyncThunk(
-  "/api/user/clients/:id(delete)",
+  "/api/client(delete)",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`/api/user/clients/${payload.id}`, {
+      const response = await axios.delete(`/api/client/${payload.id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -89,15 +89,16 @@ export const deleteClient = createAsyncThunk(
 
 //add branch
 export const addBranch = createAsyncThunk(
-  "/api/user/branches/(post)",
+  "/api/branch/(post)",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`/api/user/branches`, payload, {
+      const response = await axios.post(`/api/branch`, payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+      console.log("Add branch : ",response.data)
       return response.data;
     } catch (err) {
       if (!err?.response) {
@@ -109,10 +110,10 @@ export const addBranch = createAsyncThunk(
 );
 
 export const getBranch = createAsyncThunk(
-  "/api/user/branches/:id",
+  "/api/branch/:id",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/api/user/branches/${payload.id}`, {
+      const response = await axios.get(`/api/branch/${payload.id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -129,10 +130,10 @@ export const getBranch = createAsyncThunk(
 );
 
 export const deleteBranch = createAsyncThunk(
-  "/api/user/branches/:id(delete)",
+  "/api/branch/:id(delete)",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`/api/user/branches/${payload.id}`, {
+      const response = await axios.delete(`/api/branch/${payload.id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -149,10 +150,10 @@ export const deleteBranch = createAsyncThunk(
 );
 
 export const addPayment = createAsyncThunk(
-  "/api/user/payments",
+  "/api/payment",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/user/payments", payload, {
+      const response = await axios.post("/api/payment", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -311,7 +312,7 @@ const userSlice = createSlice({
     });
     builder.addCase(addPayment.fulfilled,(state,{payload})=>{
       state.isLoading = false;
-      state.branch = payload.branch;
+      state.client = payload.client;
     })
     builder.addCase(addPayment.rejected,(state,{payload})=>{
       state.isLoading = false;

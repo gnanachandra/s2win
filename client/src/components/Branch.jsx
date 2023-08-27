@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getBranch } from "../redux/userSlice";
+import { getClient } from "../redux/userSlice";
 import Loading from "./Loading";
 import { Button, Card, Typography } from "@material-tailwind/react";
 import AddPayment from "./AddPayment";
@@ -14,11 +14,11 @@ const Branch = () => {
   const handleOpen = () => setOpen(!open);
 
   const { id } = useParams();
-  const { isLoading, branch } = useSelector((state) => state["user"]);
+  const { isLoading, client } = useSelector((state) => state["user"]);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getBranch({ id: id }));
+    dispatch(getClient({ id: id }));
   }, []);
 
   if (isLoading) {
@@ -27,9 +27,9 @@ const Branch = () => {
   return (
     <div className="p-4 md:p-10">
       <div className="flex flex-col gap-2">
-        <p className="text-lg">Branch ID : {id}</p>
-        <p className="text-lg">Branch Name : {branch?.name}</p>
-        <p className="text-lg">Branch Contact : {branch?.contact}</p>
+        <p className="text-lg">Client ID : {id}</p>
+        <p className="text-lg">Client Name : {client?.name}</p>
+        <p className="text-lg">Client Contact : {client?.contact}</p>
       </div>
       <div className="flex justify-end">
         <Button
@@ -60,7 +60,7 @@ const Branch = () => {
               </tr>
             </thead>
             <tbody>
-              {branch?.payments?.map(({ _id, amount, mode, date }, index) => (
+              {client?.payments?.map(({ _id, amount, mode, date }, index) => (
                 <tr key={_id} className="even:bg-blue-gray-50/50">
                   <td className="p-4">
                     <Typography

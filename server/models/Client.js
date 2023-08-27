@@ -53,7 +53,7 @@ ClientSchema.virtual("branchesCount").get(function () {
 ClientSchema.virtual("totalStrength").get(function () {
   return this.branches?.reduce(
     (total, branch) => total + branch.branchStrength,
-    this.studentsCount
+    this.studentsCount || 0
   );
 });
 

@@ -25,7 +25,7 @@ const AddPayment = ({open,handleOpen}) => {
   const dispatch = useDispatch();
   const {id} = useParams();
   const addNewPayment = async(data) => {
-    data["branch"] = id;
+    data["client"] = id;
     console.log(data);
     const response = await dispatch(addPayment(data));
     if(response.meta.requestStatus === "fulfilled")
@@ -39,7 +39,7 @@ const AddPayment = ({open,handleOpen}) => {
   }
   return (
     <div>
-      <Dialog open={open} handler={handleOpen} size="sm">
+      <Dialog open={open} handler={handleOpen} size="xs">
         <DialogHeader>Fill payment details</DialogHeader>
         <DialogBody divider>
           <form
@@ -48,6 +48,7 @@ const AddPayment = ({open,handleOpen}) => {
           >
             <Input
               label="Amount"
+              defaultValue={0}
               {...register("amount", {
                 valueAsNumber : true,
                 required: {
