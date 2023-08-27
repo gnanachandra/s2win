@@ -170,10 +170,10 @@ export const addPayment = createAsyncThunk(
 );
 
 export const userLogin = createAsyncThunk(
-  "/api/user/login",
+  "/api/auth/login",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/user/login", payload,{
+      const response = await axios.post("/api/auth/login", payload,{
         headers : {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
