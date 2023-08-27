@@ -3,10 +3,8 @@ import bcrypt from "bcrypt";
 import validator from "validator";
 import jwt from "jsonwebtoken";
 
-
 const UserSchema = new mongoose.Schema(
   {
-   
     email: {
       type: String,
       required: [true, "Email cannot be empty"],
@@ -16,13 +14,11 @@ const UserSchema = new mongoose.Schema(
       },
       unique: true,
     },
-    
+
     password: {
       type: String,
       required: [true, "Password cannot be empty"],
     },
-    
-   
   },
   {
     timestamps: true,
@@ -38,12 +34,13 @@ UserSchema.methods.hashPassword = async function (password) {
 };
 
 UserSchema.methods.createAccessToken = async function () {
-  return jwt.sign({ userId: this._id, role: this.role }, 
-    process.env.ACCESS_TOKEN_SECRET,{
-    expiresIn: "1d",
-  });
+  return jwt.sign(
+    { userId: this._id, role: this.role },
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "1d",
+    }
+  );
 };
-
-
 
 export default mongoose.model("User", UserSchema);

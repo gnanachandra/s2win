@@ -11,24 +11,20 @@ const BranchSchema = new mongoose.Schema(
     },
     loginID: {
       type: String,
-      required: [true, "Login ID is required field"],
-    },
-    branchStrength : {
-        type : Number,
-        required: [true, "Branch Strength is required field"],
+      required : [true,"Branch LoginID is required"]
     },
     password: {
       type: String,
-      required: [true, "password is required field"],
+      required : [true,"Branch Password is required"]
     },
-    perStudentAmount : {
-      type : Number,
-      required : [true,"Per student amount is required"]
+    branchStrength: {
+      type: Number,
+      required: [true, "Branch Strength is required field"],
     },
-    client : {
-        type : mongoose.SchemaTypes.ObjectId,
-        ref : "Client"
-    }
+    client: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "Client",
+    },
   },
   {
     timestamps: true,
@@ -41,20 +37,4 @@ const BranchSchema = new mongoose.Schema(
   }
 );
 
-BranchSchema.virtual("payments",{
-  ref : "Payment",
-  localField : "_id",
-  foreignField : "branch"
-})
-
-BranchSchema.virtual("amountPaid").get(function () {
-  return this.payments?.reduce((total, payment) => total + payment.amount || 0, 0);
-});
-
-BranchSchema.virtual("amount").get(function () {
-  return this.branchStrength * parseFloat(this.perStudentAmount || 0);
-});
-
-
 export default mongoose.model("Branch", BranchSchema);
-

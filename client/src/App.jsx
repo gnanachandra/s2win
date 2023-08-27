@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import RequireAuth from "./features/RequireAuth";
 import Login from "./components/Login";
 const App = () => {
+  
   return (
     <Router>
       <Routes>

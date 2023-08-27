@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 const PaymentSchema = new mongoose.Schema({
-  branch: {
+  client: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: "Branch",
-    required: [true, "Branch details cannot be empty"],
+    ref: "Client",
+    required: [true, "Client Details cannot be empty"],
   },
   amount: {
     type: Number,
