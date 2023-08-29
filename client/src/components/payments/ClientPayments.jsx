@@ -8,6 +8,7 @@ import AddPayment from "./AddPayment";
 import PaymentsTable from "./PaymentsTable";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { formatIndianNumber } from "../../utils/format";
+
 const ClientPayments = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);

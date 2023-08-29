@@ -188,6 +188,31 @@ export const deletePayment = createAsyncThunk(
     }
   }
 );
+
+export const updatePayment = createAsyncThunk(
+  "/api/payment(update)",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(
+        `/api/payment/${payload._id}`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (err) {
+      if (!err?.response) {
+        throw err;
+      }
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
 export const userLogin = createAsyncThunk(
   "/api/auth/login",
   async (payload, { rejectWithValue }) => {
@@ -257,12 +282,20 @@ const userSlice = createSlice({
     user: {},
     clients: [],
     payments: [],
-    payment : {},
+    payment: {},
     client: {},
     branch: {},
     isLoading: false,
   },
-  reducers: {},
+  reducers: {
+    setPayment: (state, { payload }) => {
+      console.log(payload.id);
+      state.payment = state.payments.find((pay) => pay._id == payload.id);
+    },
+    updatePaymentFields: (state, { payload }) => {
+      state.payment = { ...state.payment, [payload.field]: payload.value };
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(userLogin.pending, (state) => {
       state.isLoading = true;
@@ -387,11 +420,24 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.client = payload.client;
       state.payments = payload.payments;
-      toast.success(payload.message)
+      toast.success(payload.message);
     });
     builder.addCase(deletePayment.rejected, (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload?.message || "Unable to delete payment");
+    });
+
+    builder.addCase(updatePayment.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updatePayment.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.payments = payload.payments;
+      toast.success(payload.message);
+    });
+    builder.addCase(updatePayment.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload?.message || "Unable to update payment");
     });
 
     builder.addCase(getAllPayments.pending, (state) => {
@@ -419,5 +465,7 @@ const userSlice = createSlice({
     });
   },
 });
+
+export const { setPayment, updatePaymentFields } = userSlice.actions;
 
 export default userSlice.reducer;
