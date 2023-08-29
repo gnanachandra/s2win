@@ -20,7 +20,7 @@ export const addPayment = asyncHandler(async (req, res) => {
 
 export const getPayment = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  console.log(req.params)
+  console.log(req.params);
   if (!mongoose.isValidObjectId(id)) {
     throw new Error("Not a valid mongoDB id", StatusCodes.BAD_REQUEST);
   }
@@ -29,6 +29,23 @@ export const getPayment = asyncHandler(async (req, res) => {
     .status(StatusCodes.OK)
     .json({ message: "Payment Details sent", payment });
 });
+
+export const updatePayment = asyncHandler(async (req, res) => {
+  const { _id, client, amount, mode, date } = req.body;
+  if (!client || !amount || !mode || !date) {
+    throw new Error("Fill all details", StatusCodes.BAD_REQUEST);
+  }
+  const updatedPayment = await Payment.findByIdAndUpdate(_id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  const payments = await Payment.find({}).sort({ date: -1 }).populate("client");
+  return res.status(StatusCodes.OK).json({
+    message: `Payment has been updated`,
+    payments,
+  });
+});
+
 export const deletePayment = asyncHandler(async (req, res) => {
   const paymentId = req.params.id;
   if (!mongoose.isValidObjectId(paymentId)) {

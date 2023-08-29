@@ -3,7 +3,7 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Card, Typography } from "@material-tailwind/react";
 import { formatDate } from "../../utils/formatDate";
 import { useDispatch } from "react-redux";
-import { deletePayment, getPaymentDetails } from "../../redux/userSlice";
+import { deletePayment, setPayment } from "../../redux/userSlice";
 import { useState } from "react";
 import EditPayment from "./EditPayment";
 const TABLE_HEAD = [
@@ -87,6 +87,7 @@ const PaymentsTable = ({ data, clientName }) => {
                         className="w-6 h-6 cursor-pointer"
                         onClick={() => {
                           setPaymentId(_id);
+                          dispatch(setPayment({ id: _id }));
                           handleOpen();
                         }}
                       />
@@ -101,7 +102,9 @@ const PaymentsTable = ({ data, clientName }) => {
             No Payments{" "}
           </p>
         )}
-        {paymentId && <EditPayment open={open} handleOpen={handleOpen} id={paymentId} />}
+        {paymentId && (
+          <EditPayment open={open} handleOpen={handleOpen} id={paymentId} />
+        )}
       </Card>
     </>
   );

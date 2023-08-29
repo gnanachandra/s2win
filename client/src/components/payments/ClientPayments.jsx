@@ -6,6 +6,7 @@ import Loading from "../Loading";
 import { Button } from "@material-tailwind/react";
 import AddPayment from "./AddPayment";
 import PaymentsTable from "./PaymentsTable";
+
 const ClientPayments = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
