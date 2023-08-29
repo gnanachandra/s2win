@@ -45,6 +45,7 @@ const AddBranch = ({ open, handleOpen }) => {
             className="flex flex-col gap-5"
           >
             <Input
+              required
               label="branch name"
               {...register("name", {
                 required: {
@@ -53,7 +54,19 @@ const AddBranch = ({ open, handleOpen }) => {
                 },
               })}
             />
+
             <Input
+              required
+              label="branch code"
+              {...register("branchCode", {
+                required: {
+                  value: true,
+                  message: "Enter branch code",
+                },
+              })}
+            />
+            <Input
+              required
               label="contact number"
               {...register("contact", {
                 required: {
@@ -74,6 +87,7 @@ const AddBranch = ({ open, handleOpen }) => {
               })}
             />
             <Input
+              required
               label="Branch Strength"
               {...register("branchStrength", {
                 required: {
@@ -91,6 +105,7 @@ const AddBranch = ({ open, handleOpen }) => {
             />
 
             <Input
+            required
               label="LoginID"
               {...register("loginID", {
                 required: {
@@ -100,6 +115,7 @@ const AddBranch = ({ open, handleOpen }) => {
               })}
             />
             <Input
+            required
               label="password"
               {...register("password", {
                 required: {

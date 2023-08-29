@@ -5,8 +5,8 @@ import mongoose from "mongoose";
 
 
 export const addClient = asyncHandler(async(req,res)=> {
-    const {name,contact,url,hasBranches,loginId,password,perStudentAmount,} = req.body;
-    if(!name || !contact || !url || !hasBranches || !loginId || !password || !perStudentAmount)
+    const {name,contact,url,hasBranches,loginId,password,amount,paymentType} = req.body;
+    if(!name || !contact || !url || !hasBranches || !loginId || !password || !amount || !paymentType)
     {
         throw new Error("Fill all details",StatusCodes.BAD_REQUEST);
     }

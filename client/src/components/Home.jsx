@@ -6,7 +6,7 @@ import { getClients } from "../redux/userSlice";
 import { Button, Card, Typography } from "@material-tailwind/react";
 import AddClient from "./AddClient";
 import { Link } from "react-router-dom";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import DeleteClientDialog from "./dialogs/DeleteClientDialog";
 
 const TABLE_HEAD = [
@@ -18,7 +18,8 @@ const TABLE_HEAD = [
   "Password",
   "Branches Count",
   "Total Strength",
-  "Per Student Amount",
+  "Payment Type",
+  "Amount",
   "Total Amount",
   "Amount Paid",
   "Branches",
@@ -69,7 +70,6 @@ const Home = () => {
                   <th
                     key={head}
                     className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
-                    
                   >
                     <Typography
                       variant="small"
@@ -94,7 +94,8 @@ const Home = () => {
                     password,
                     branchesCount,
                     totalStrength,
-                    perStudentAmount,
+                    paymentType,
+                    amount,
                     totalAmount,
                     totalAmountPaid,
                     hasBranches,
@@ -180,7 +181,16 @@ const Home = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {perStudentAmount?.toLocaleString()}
+                        {paymentType}
+                      </Typography>
+                    </td>
+                    <td className="p-4">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {amount?.toLocaleString()}
                       </Typography>
                     </td>
                     <td className="p-4">
@@ -241,7 +251,7 @@ const Home = () => {
                     </td>
                     <td>
                       <TrashIcon
-                        className="h-8 w-8 text-red-500 cursor-pointer hover:text-red-800 place-items-center ml-4"
+                        className="h-6 w-6 text-red-500 cursor-pointer hover:text-red-800 place-items-center ml-4"
                         onClick={() => {
                           setClientName(name),
                             setClientId(_id),

@@ -5,15 +5,17 @@ import { getClient } from "../redux/userSlice";
 import Loading from "./Loading";
 import { Button, Card, Typography } from "@material-tailwind/react";
 import AddBranch from "./AddBranch";
-import { TrashIcon } from "@heroicons/react/24/solid";
+import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
 import DeleteBranchDialog from "./dialogs/DeleteBranchDialog";
+import { toast } from "react-hot-toast";
 const TABLE_HEAD = [
-  "Branch ID",
+  "Branch Code",
   "Branch Name",
   "Contact",
   "Strength",
   "Login ID",
   "Password",
+  "Login",
   "Action",
 ];
 const Client = () => {
@@ -74,7 +76,15 @@ const Client = () => {
             <tbody>
               {client?.branches?.map(
                 (
-                  { _id, name, contact, branchStrength, loginID, password },
+                  {
+                    _id,
+                    branchCode,
+                    name,
+                    contact,
+                    branchStrength,
+                    loginID,
+                    password,
+                  },
                   index
                 ) => (
                   <tr key={_id} className="even:bg-blue-gray-50/50">
@@ -84,7 +94,7 @@ const Client = () => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {(_id && _id.substring(0, 6)) || "N/A"}
+                        {branchCode || "NA"}
                       </Typography>
                     </td>
                     <td className="p-4">
@@ -132,21 +142,23 @@ const Client = () => {
                         {password}
                       </Typography>
                     </td>
-
+                    <td className="p-4">
+                      <input
+                        type="button"
+                        value="Login"
+                        className="bg-deep-orange-500 text-white font-bold p-1.5 hover:shadow-sm rounded-md cursor-pointer"
+                      />
+                    </td>
                     <td className="p-4 flex gap-4 items-center">
-                      <a href={client?.url} target="_blank" rel="noreferrer">
-                        <Button className="bg-cyan-700 p-2 hover:shadow-cyan-600 hover:shadow-sm">
-                          Login
-                        </Button>
-                      </a>
                       <TrashIcon
-                        className="h-8 w-8 text-red-500 cursor-pointer hover:text-red-800"
+                        className="h-6 w-6 text-red-500 cursor-pointer hover:text-red-800"
                         onClick={() => {
                           setBranchName(name),
                             setBranchId(_id),
                             handleOpenWarning();
                         }}
                       />
+                      <PencilSquareIcon className="h-6 w-6 cursor-pointer" onClick={()=>toast.success("Edit option to be implemented")} />
                     </td>
                   </tr>
                 )

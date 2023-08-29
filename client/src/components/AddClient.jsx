@@ -18,6 +18,7 @@ const AddClient = ({ open, handleOpen }) => {
   const { errors } = formState;
   const errorMessages = Object.values(errors);
   const [hasBranches, setHasBranches] = useState("yes");
+  const [paymentType, setPaymentType] = useState("perStudent");
   if (errorMessages.length !== 0) {
     const obj1 = errorMessages[0];
     toast.error(errorMessages[0]?.message || Object.values(obj1)[0].message);
@@ -26,6 +27,7 @@ const AddClient = ({ open, handleOpen }) => {
   const addnewClient = async (data) => {
     console.log(data);
     data["hasBranches"] = hasBranches;
+    data["paymentType"] = paymentType;
     const response = await dispatch(addClient(data));
     if (response.meta.requestStatus === "fulfilled") {
       toast.success(response.payload.message);
@@ -36,7 +38,12 @@ const AddClient = ({ open, handleOpen }) => {
   };
   return (
     <div>
-      <Dialog open={open} handler={handleOpen} size="sm">
+      <Dialog
+        open={open}
+        handler={handleOpen}
+        size="sm"
+        className="h-[36rem] overflow-auto"
+      >
         <DialogHeader>Add New Client</DialogHeader>
         <DialogBody divider>
           <form
@@ -99,14 +106,35 @@ const AddClient = ({ open, handleOpen }) => {
                 },
               })}
             />
+            <div className="flex gap-2 items-center">
+              <label htmlFor="paymentType">Payment Type</label>
+              <input
+                type="radio"
+                name="paymentType"
+                id="paymentType"
+                value={"perStudent"}
+                checked={paymentType === "perStudent"}
+                onClick={(e) => setPaymentType(e.target.value)}
+              />
+              <label htmlFor="yes">Per Student</label>
+              <input
+                type="radio"
+                name="paymentType"
+                id="perBranch"
+                value={"perBranch"}
+                checked={paymentType === "perBranch"}
+                onClick={(e) => setPaymentType(e.target.value)}
+              />
+              <label htmlFor="no">Per Branch</label>
+            </div>
             <Input
-              label="Per Student Amount"
+              label={paymentType + " Amount"}
               defaultValue={0}
-              onChange={(e)=>console.log(e.target.value)}
-              {...register("perStudentAmount", {
+              onChange={(e) => console.log(e.target.value)}
+              {...register("amount", {
                 required: {
                   value: true,
-                  message: "Per Student Amount is required",
+                  message: "Amount is required",
                 },
                 valueAsNumber: true,
                 validate: {
@@ -151,7 +179,7 @@ const AddClient = ({ open, handleOpen }) => {
                     value: true,
                     message: "Enter Students count",
                   },
-                  valueAsNumber : true,
+                  valueAsNumber: true,
                   validate: {
                     isNumber: (fieldValue) => {
                       return (
@@ -163,7 +191,7 @@ const AddClient = ({ open, handleOpen }) => {
                 })}
               />
             )}
-            <div>
+            <div className="flex justify-between items-center mb-5">
               <Button
                 variant="text"
                 color="red"

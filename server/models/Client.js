@@ -27,7 +27,11 @@ const ClientSchema = new mongoose.Schema(
       type: String,
       required: [true, "Has branches is required field"],
     },
-    perStudentAmount: {
+    paymentType : {
+      type : String,
+      required : [true,"Payment Type is required"]
+    },
+    amount: {
       type: Number,
       required: [true, "Per student Amount is required"],
     },
@@ -58,7 +62,7 @@ ClientSchema.virtual("totalStrength").get(function () {
 });
 
 ClientSchema.virtual("totalAmount").get(function () {
-  return this.perStudentAmount * this.totalStrength;
+  return this.amount * this.totalStrength;
 });
 
 ClientSchema.virtual("totalAmountPaid").get(function () {

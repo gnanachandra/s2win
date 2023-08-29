@@ -5,6 +5,11 @@ const BranchSchema = new mongoose.Schema(
       type: String,
       required: [true, "Branch Name is required"],
     },
+    branchCode: {
+      type: String,
+      required: [true, "Branch code is required"],
+      unique : true
+    },
     contact: {
       type: String,
       required: [true, "Contact number is required"],
@@ -15,11 +20,11 @@ const BranchSchema = new mongoose.Schema(
     },
     loginID: {
       type: String,
-      required : [true,"Branch LoginID is required"]
+      required: [true, "Branch LoginID is required"],
     },
     password: {
       type: String,
-      required : [true,"Branch Password is required"]
+      required: [true, "Branch Password is required"],
     },
     client: {
       type: mongoose.SchemaTypes.ObjectId,
