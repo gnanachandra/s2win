@@ -9,6 +9,8 @@ import DeleteClientDialog from "./dialogs/DeleteClientDialog";
 import ClientsTable from "./ClientsTable";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { searchClients } from "../utils/serach";
+import calculateTotals from "../utils/count";
+import { formatIndianNumber } from "../utils/format";
 
 const Home = () => {
   const [openAddClient, setAddClientOpen] = React.useState(false);
@@ -16,6 +18,7 @@ const Home = () => {
   const { isLoading, clients } = useSelector((state) => state["user"]);
   const [query, setQuery] = useState("");
   const dispatch = useDispatch();
+  const data = calculateTotals(clients);
   useEffect(() => {
     dispatch(getClients());
   }, []);
@@ -46,8 +49,13 @@ const Home = () => {
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
+        <div className="flex flex-wrap gap-2 lg:flex-row justify-between mt-4">
+          <p className="font-semibold">Total Students : {data["totalStrength"]} </p>
+          <p className="font-semibold">Total Amount : {formatIndianNumber(data["allClientsAmount"]).toLocaleString()}</p>
+          <p className="font-semibold">Amount Paid : {formatIndianNumber(data["amountPaid"]).toLocaleString()}</p>
+        </div>
         <div>
-          <ClientsTable data={searchClients(query,clients)} />
+          <ClientsTable data={searchClients(query, clients)} />
         </div>
       </div>
       <AddClient open={openAddClient} handleOpen={handleOpenAddClient} />

@@ -61,8 +61,15 @@ ClientSchema.virtual("totalStrength").get(function () {
   );
 });
 
+
 ClientSchema.virtual("totalAmount").get(function () {
-  return this.amount * this.totalStrength;
+  return (
+    this.paymentType === 'perStudent' ? (
+      this.amount * this.totalStrength
+    ) : (
+      this.amount * this.branchesCount
+    )
+  );
 });
 
 ClientSchema.virtual("totalAmountPaid").get(function () {

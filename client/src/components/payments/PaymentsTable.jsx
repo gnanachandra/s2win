@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Card, Typography } from "@material-tailwind/react";
-import { formatDate } from "../../utils/formatDate";
+import { formatDate } from "../../utils/format";
 import { useDispatch } from "react-redux";
 import { deletePayment, getPaymentDetails } from "../../redux/userSlice";
 import { useState } from "react";

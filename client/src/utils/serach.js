@@ -1,4 +1,4 @@
-import { formatDate } from "./formatDate";
+import { formatDate } from "./format";
 
 export const searchPayments = (query, payments) => {
   if (!query) {

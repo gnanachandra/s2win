@@ -37,11 +37,11 @@ export function NavBar() {
       <Navbar className="mx-auto max-w-screen-xl py-2 px-4 lg:px-8 lg:py-4 shadow-none">
         <div className="container w-full flex items-center justify-between text-blue-gray-900">
           <Link to="/" className="font-bold text-lg">
-            Sure 2 Win Technologies
+            <img src="/logo.png" alt="Sure 2 win Technologies" className="h-10"/>
           </Link>
           <div className="hidden lg:block">{navList}</div>
           <Button
-            className="hidden lg:block bg-red-600  place-self-end w-fit capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
+            className="hidden lg:block bg-red-600  w-fit capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
             onClick={handleLogout}
           >
             Logout

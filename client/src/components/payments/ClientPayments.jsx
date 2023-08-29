@@ -7,6 +7,7 @@ import { Button } from "@material-tailwind/react";
 import AddPayment from "./AddPayment";
 import PaymentsTable from "./PaymentsTable";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { formatIndianNumber } from "../../utils/format";
 const ClientPayments = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(!open);
@@ -33,7 +34,8 @@ const ClientPayments = () => {
         <p className="text-lg">Client Name : {client?.name}</p>
         <p className="text-lg">Client Contact : {client?.contact}</p>
       </div>
-      <div className="flex justify-end mt-2">
+      <div className="flex mt-2 items-center justify-between shadow-sm border py-2">
+        <p className="font-bold">Amount Paid : {formatIndianNumber(client?.totalAmountPaid)} </p>
         <Button
           className="bg-deep-orange-600 capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
           onClick={handleOpen}

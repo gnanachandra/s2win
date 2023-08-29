@@ -2,7 +2,8 @@ import Client from "../models/Client.js";
 import asyncHandler from "express-async-handler"
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
-
+import Branch from "../models/Branch.js"
+import Payment from "../models/Payment.js";
 
 export const addClient = asyncHandler(async(req,res)=> {
     const {name,contact,url,hasBranches,loginId,password,amount,paymentType} = req.body;
@@ -52,6 +53,8 @@ export const deleteClient = asyncHandler(async(req,res)=>{
         throw new Error("Client details not found",StatusCodes.NOT_FOUND);
     }
     const response = await Client.findByIdAndDelete(clientId);
+    const branchesResponse = await Branch.deleteMany({client : response._id});
+    const paymentsResponse = await Payment.deleteMany({client : response._id});
     const clients = await Client.find({}).populate(["branches","payments"])
     return res.status(StatusCodes.OK).json({message : `Client ${client.name} details has been deleted`,clients});
 })
