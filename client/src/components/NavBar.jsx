@@ -41,7 +41,7 @@ export function NavBar() {
           </Link>
           <div className="hidden lg:block">{navList}</div>
           <Button
-            className="bg-red-600  place-self-end w-fit capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
+            className="hidden lg:block bg-red-600  place-self-end w-fit capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
             onClick={handleLogout}
           >
             Logout
@@ -85,10 +85,13 @@ export function NavBar() {
           </IconButton>
         </div>
         <MobileNav open={openNav}>
-          <div className="container mx-auto">
+          <div className="container mx-auto text-black">
             {navList}
-            <Button variant="gradient" size="sm" fullWidth className="mb-2">
-              <span>Buy Now</span>
+            <Button
+              className=" bg-red-600  place-self-end w-fit capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
+              onClick={handleLogout}
+            >
+              Logout
             </Button>
           </div>
         </MobileNav>

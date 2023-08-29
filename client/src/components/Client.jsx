@@ -5,7 +5,7 @@ import { getClient } from "../redux/userSlice";
 import Loading from "./Loading";
 import { Button, Card, Typography } from "@material-tailwind/react";
 import AddBranch from "./AddBranch";
-import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PencilSquareIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import DeleteBranchDialog from "./dialogs/DeleteBranchDialog";
 import { toast } from "react-hot-toast";
 const TABLE_HEAD = [
@@ -40,6 +40,10 @@ const Client = () => {
   }
   return (
     <div className="p-4 md:p-10">
+      <Link to="/" className="flex items-center cursor-pointer mb-5 gap-2">
+        <ArrowLeftIcon className="h-6 w-6" />
+        <p>Back to Home</p>
+      </Link>
       <div className="flex flex-col gap-2">
         <p className="text-lg">Client ID : {id}</p>
         <p className="text-lg">Client Name : {client?.name}</p>
@@ -158,7 +162,12 @@ const Client = () => {
                             handleOpenWarning();
                         }}
                       />
-                      <PencilSquareIcon className="h-6 w-6 cursor-pointer" onClick={()=>toast.success("Edit option to be implemented")} />
+                      <PencilSquareIcon
+                        className="h-6 w-6 cursor-pointer"
+                        onClick={() =>
+                          toast.success("Edit option to be implemented")
+                        }
+                      />
                     </td>
                   </tr>
                 )
