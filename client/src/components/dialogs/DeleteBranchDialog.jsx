@@ -9,7 +9,6 @@ import {
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { useDispatch } from "react-redux";
 import { deleteBranch } from "../../redux/userSlice";
-import { useState } from "react";
 
 const DeleteBranchDialog = ({ open, handleOpen, branchName, id }) => {
 

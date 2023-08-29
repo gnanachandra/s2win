@@ -153,7 +153,7 @@ export const addPayment = createAsyncThunk(
   "/api/payment",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/payment", payload, {
+      const response = await axios.post("/api/payment/all", payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -212,7 +212,28 @@ export const getAllPayments = createAsyncThunk(
   "/api/payment(all)",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.get("/api/payment", {
+      const response = await axios.get("/api/payment/all", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+export const getPaymentDetails = createAsyncThunk(
+  "/api/payment/:id(get)",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`/api/payment/${payload.id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -236,6 +257,7 @@ const userSlice = createSlice({
     user: {},
     clients: [],
     payments: [],
+    payment : {},
     client: {},
     branch: {},
     isLoading: false,
@@ -382,6 +404,18 @@ const userSlice = createSlice({
     builder.addCase(getAllPayments.rejected, (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload?.message || "Unable to get All payments");
+    });
+
+    builder.addCase(getPaymentDetails.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getPaymentDetails.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.payment = payload.payment;
+    });
+    builder.addCase(getPaymentDetails.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload?.message || "Unable to get payment Details");
     });
   },
 });

@@ -18,6 +18,17 @@ export const addPayment = asyncHandler(async (req, res) => {
   });
 });
 
+export const getPayment = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(req.params)
+  if (!mongoose.isValidObjectId(id)) {
+    throw new Error("Not a valid mongoDB id", StatusCodes.BAD_REQUEST);
+  }
+  const payment = await Payment.findById(id);
+  return res
+    .status(StatusCodes.OK)
+    .json({ message: "Payment Details sent", payment });
+});
 export const deletePayment = asyncHandler(async (req, res) => {
   const paymentId = req.params.id;
   if (!mongoose.isValidObjectId(paymentId)) {
@@ -32,11 +43,11 @@ export const deletePayment = asyncHandler(async (req, res) => {
     "branches",
     "payments",
   ]);
-  const payments = await Payment.find({}).sort({date : -1}).populate("client")
+  const payments = await Payment.find({}).sort({ date: -1 }).populate("client");
   return res.status(StatusCodes.OK).json({
     message: `Payment with id ${response.id} has been deleted`,
     client: data,
-    payments
+    payments,
   });
 });
 
