@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { Toaster, toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { addPayment } from "../redux/userSlice";
+import { addPayment } from "../../redux/userSlice";
 
 
 const AddPayment = ({open,handleOpen}) => {

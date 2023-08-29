@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin } from "../redux/userSlice";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
 const Login = () => {
 
@@ -24,10 +25,14 @@ const Login = () => {
       navigate("/", { replace: true });
     }
   };
-  const {token} = useSelector((state)=>state["user"]);
+  const {token,isLoading} = useSelector((state)=>state["user"]);
   if(token)
   {
     return <Navigate to="/" replace:true/>
+  }
+  if(isLoading)
+  {
+    return <Loading/>
   }
   return (
     <div className="min-h-screen w-screen  flex items-center  justify-center ">

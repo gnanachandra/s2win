@@ -3,8 +3,6 @@ import asyncHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
 import Payment from "../models/Payment.js";
-import bcrypt from "bcrypt";
-import User from "../models/User.js";
 import Client from "../models/Client.js";
 
 export const addPayment = asyncHandler(async (req, res) => {
@@ -13,13 +11,11 @@ export const addPayment = asyncHandler(async (req, res) => {
     throw new Error("Fill all details", StatusCodes.BAD_REQUEST);
   }
   const newPayment = await Payment.create(req.body);
-  const data = await Client.findById(client).populate(["branches","payments"])
-  return res
-    .status(StatusCodes.OK)
-    .json({
-      message: `Payment has been added to client ${client.name}`,
-      client : data
-    });
+  const data = await Client.findById(client).populate(["branches", "payments"]);
+  return res.status(StatusCodes.OK).json({
+    message: `Payment has been added to client ${client.name}`,
+    client: data,
+  });
 });
 
 export const deletePayment = asyncHandler(async (req, res) => {
@@ -31,14 +27,17 @@ export const deletePayment = asyncHandler(async (req, res) => {
   if (!found) {
     throw new Error("Payment details not found", StatusCodes.NOT_FOUND);
   }
-  const response = await findByIdAndDelete(paymentId);
-  const data = await Client.findById(response.client).populate(["branches","payments"])
-  return res
-    .status(StatusCodes.OK)
-    .json({
-      message: `Payment with id ${response.id} has been deleted`,
-      client: data,
-    });
+  const response = await Payment.findByIdAndDelete(paymentId);
+  const data = await Client.findById(response.client).populate([
+    "branches",
+    "payments",
+  ]);
+  const payments = await Payment.find({}).sort({date : -1}).populate("client")
+  return res.status(StatusCodes.OK).json({
+    message: `Payment with id ${response.id} has been deleted`,
+    client: data,
+    payments
+  });
 });
 
 export const getPayments = asyncHandler(async (req, res) => {
@@ -46,8 +45,15 @@ export const getPayments = asyncHandler(async (req, res) => {
   if (!mongoose.isValidObjectId(clientId)) {
     throw new Error("Not a valid object ID", StatusCodes.BAD_REQUEST);
   }
-  const payments = await Payment.find({client : clientId}).sort({ date: -1 });
+  const payments = await Payment.find({ client: clientId }).sort({ date: -1 });
   return res
     .status(StatusCodes.OK)
     .json({ message: "Payment details sent !", payments });
+});
+
+export const getAllPayments = asyncHandler(async (req, res) => {
+  const payments = await Payment.find({}).sort({ date: -1 }).populate("client");
+  return res
+    .status(StatusCodes.OK)
+    .json({ message: "All payments Sent", payments });
 });

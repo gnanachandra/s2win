@@ -49,10 +49,10 @@ const Home = () => {
   return (
     <>
       <div className="p-4 md:p-10">
-        <h1 className="text-gray-700 text-center font-bold text-lg lg:text-xl">
-          Clients Details
-        </h1>
-        <div className="flex justify-end mt-2">
+        <div className="flex items-center justify-between mt-2">
+          <h1 className="text-black text-center font-bold text-lg lg:text-xl">
+            Clients Details
+          </h1>
           <Button
             className="bg-deep-orange-600 capitalize rouned-sm hover:shadow-deep-orange-500 hover:shadow-sm"
             onClick={handleOpenAddClient}
@@ -63,17 +63,18 @@ const Home = () => {
 
         <Card className="h-full w-full overflow-x-scroll lg:overflow-auto rounded-none shadow-none">
           <table className="w-full min-w-max table-auto text-left border border-gray-700 mt-5">
-            <thead className="">
+            <thead className="break-words">
               <tr className="border border-gray-900">
                 {TABLE_HEAD.map((head) => (
                   <th
                     key={head}
                     className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
-                    style={{ wordBreak: "break-all" }}
+                    
                   >
                     <Typography
                       variant="small"
                       className="text-black font-bold text-lg leading-none opacity-70"
+                      style={{ wordBreak: "break-all" }}
                     >
                       {head}
                     </Typography>
@@ -228,7 +229,7 @@ const Home = () => {
                       </Link>
                     </td>
                     <td className="p-4 ">
-                      {hasBranches === "no" ?(
+                      {hasBranches === "no" ? (
                         <a href={url} target="_blank" rel="noreferrer">
                           <Button className="bg-cyan-700 p-3 hover:shadow-cyan-600 hover:shadow-sm">
                             Login

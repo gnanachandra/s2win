@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "../api/axios"
+import axios from "../api/axios";
 import { toast } from "react-hot-toast";
 
 //getclients
@@ -13,7 +13,7 @@ export const getClients = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      
+
       return response.data;
     } catch (err) {
       if (!err?.response) {
@@ -98,7 +98,7 @@ export const addBranch = createAsyncThunk(
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      console.log("Add branch : ",response.data)
+      console.log("Add branch : ", response.data);
       return response.data;
     } catch (err) {
       if (!err?.response) {
@@ -169,15 +169,34 @@ export const addPayment = createAsyncThunk(
   }
 );
 
+export const deletePayment = createAsyncThunk(
+  "/api/payment(delete)",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(`/api/payment/${payload.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      return response.data;
+    } catch (err) {
+      if (!err?.response) {
+        throw err;
+      }
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
 export const userLogin = createAsyncThunk(
   "/api/auth/login",
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.post("/api/auth/login", payload,{
-        headers : {
+      const response = await axios.post("/api/auth/login", payload, {
+        headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-        }
+        },
       });
       return response.data;
     } catch (error) {
@@ -189,20 +208,40 @@ export const userLogin = createAsyncThunk(
   }
 );
 
-const token = localStorage.getItem("token")
+export const getAllPayments = createAsyncThunk(
+  "/api/payment(all)",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("/api/payment", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (!error?.response) {
+        throw error;
+      }
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
+const token = localStorage.getItem("token");
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    token : token,
+    token: token,
     user: {},
     clients: [],
+    payments: [],
     client: {},
     branch: {},
     isLoading: false,
   },
   reducers: {},
   extraReducers: (builder) => {
-
     builder.addCase(userLogin.pending, (state) => {
       state.isLoading = true;
     });
@@ -307,17 +346,43 @@ const userSlice = createSlice({
       toast.error(payload?.message || "Unable to delete branch details");
     });
 
-    builder.addCase(addPayment.pending,(state)=>{
+    builder.addCase(addPayment.pending, (state) => {
       state.isLoading = true;
     });
-    builder.addCase(addPayment.fulfilled,(state,{payload})=>{
+    builder.addCase(addPayment.fulfilled, (state, { payload }) => {
       state.isLoading = false;
       state.client = payload.client;
-    })
-    builder.addCase(addPayment.rejected,(state,{payload})=>{
+    });
+    builder.addCase(addPayment.rejected, (state, { payload }) => {
       state.isLoading = false;
-      toast.error(payload?.message || "Unable to add payment")
-    })
+      toast.error(payload?.message || "Unable to add payment");
+    });
+
+    builder.addCase(deletePayment.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(deletePayment.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.client = payload.client;
+      state.payments = payload.payments;
+      toast.success(payload.message)
+    });
+    builder.addCase(deletePayment.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload?.message || "Unable to delete payment");
+    });
+
+    builder.addCase(getAllPayments.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getAllPayments.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.payments = payload.payments;
+    });
+    builder.addCase(getAllPayments.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload?.message || "Unable to get All payments");
+    });
   },
 });
 
