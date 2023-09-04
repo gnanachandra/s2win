@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import { getClient } from "../redux/userSlice";
+import { getClient, setBranch } from "../redux/userSlice";
 import Loading from "./Loading";
 import { Button, Card, Typography } from "@material-tailwind/react";
 import AddBranch from "./AddBranch";
-import { TrashIcon, PencilSquareIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
+import {
+  TrashIcon,
+  PencilSquareIcon,
+  ArrowLeftIcon,
+} from "@heroicons/react/24/outline";
 import DeleteBranchDialog from "./dialogs/DeleteBranchDialog";
 import { toast } from "react-hot-toast";
+import EditBranch from "./EditBranch";
 const TABLE_HEAD = [
   "Branch Code",
   "Branch Name",
@@ -24,6 +29,9 @@ const Client = () => {
 
   const [openWarning, setOpenWarning] = useState(false);
   const handleOpenWarning = () => setOpenWarning(!openWarning);
+
+  const [openEdit, setOpenEdit] = useState(false);
+  const handleOpenEdit = () => setOpenEdit(!openEdit);
 
   const { id } = useParams();
   const { isLoading, client } = useSelector((state) => state["user"]);
@@ -79,18 +87,15 @@ const Client = () => {
             </thead>
             <tbody>
               {client?.branches?.map(
-                (
-                  {
-                    _id,
-                    branchCode,
-                    name,
-                    contact,
-                    branchStrength,
-                    loginID,
-                    password,
-                  },
-                  index
-                ) => (
+                ({
+                  _id,
+                  branchCode,
+                  name,
+                  contact,
+                  branchStrength,
+                  loginID,
+                  password,
+                }) => (
                   <tr key={_id} className="even:bg-blue-gray-50/50">
                     <td className="p-4">
                       <Typography
@@ -164,9 +169,10 @@ const Client = () => {
                       />
                       <PencilSquareIcon
                         className="h-6 w-6 cursor-pointer"
-                        onClick={() =>
-                          toast.success("Edit option to be implemented")
-                        }
+                        onClick={() => {
+                          dispatch(setBranch({id:_id}));
+                          handleOpenEdit();
+                        }}
                       />
                     </td>
                   </tr>
@@ -183,6 +189,8 @@ const Client = () => {
         branchName={branchName}
         id={branchId}
       />
+
+      <EditBranch open={openEdit} handleOpen={handleOpenEdit} />
     </div>
   );
 };

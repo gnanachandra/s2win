@@ -27,7 +27,7 @@ const BranchSchema = new mongoose.Schema(
       required: [true, "Branch Password is required"],
     },
     client: {
-      type: mongoose.SchemaTypes.ObjectId,
+      type : mongoose.SchemaTypes.ObjectId,
       ref: "Client",
     },
   },

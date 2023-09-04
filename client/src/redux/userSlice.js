@@ -87,6 +87,27 @@ export const deleteClient = createAsyncThunk(
   }
 );
 
+
+export const updateClient = createAsyncThunk(
+  "/api/client(update)",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(`/api/client/${payload.id}`, payload,{
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      return response.data;
+    } catch (err) {
+      if (!err?.response) {
+        throw err;
+      }
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
 //add branch
 export const addBranch = createAsyncThunk(
   "/api/branch/(post)",
@@ -114,6 +135,26 @@ export const getBranch = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const response = await axios.get(`/api/branch/${payload.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      return response.data;
+    } catch (err) {
+      if (!err?.response) {
+        throw err;
+      }
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
+export const updateBranchDetails = createAsyncThunk(
+  "/api/branch(update)",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch(`/api/branch/${payload.id}`, payload, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -282,6 +323,7 @@ const userSlice = createSlice({
     user: {},
     clients: [],
     payments: [],
+    branches: [],
     payment: {},
     client: {},
     branch: {},
@@ -294,6 +336,12 @@ const userSlice = createSlice({
     },
     updatePaymentFields: (state, { payload }) => {
       state.payment = { ...state.payment, [payload.field]: payload.value };
+    },
+    setBranch: (state, { payload }) => {
+      state.branch = state.branches.find((branch) => branch._id == payload.id);
+    },
+    setClient: (state, { payload }) => {
+      state.client = state.clients.find((client) => client._id == payload.id);
     },
   },
   extraReducers: (builder) => {
@@ -329,6 +377,8 @@ const userSlice = createSlice({
     builder.addCase(getClient.fulfilled, (state, { payload }) => {
       state.isLoading = false;
       state.client = payload.client;
+      state.payments = payload.client.payments;
+      state.branches = payload.client.branches;
       toast.success(payload.message);
     });
     builder.addCase(getClient.rejected, (state, { payload }) => {
@@ -362,6 +412,19 @@ const userSlice = createSlice({
       toast.error(payload?.message || "Unable to delete client details");
     });
 
+    builder.addCase(updateClient.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateClient.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.clients = payload.clients;
+      toast.success(payload.message);
+    });
+    builder.addCase(updateClient.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload?.message || "Unable to update client details");
+    });
+
     builder.addCase(addBranch.pending, (state) => {
       state.isLoading = true;
     });
@@ -384,6 +447,20 @@ const userSlice = createSlice({
       toast.success(payload.message);
     });
     builder.addCase(getBranch.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload?.message || "Unable to get branch details");
+    });
+
+    builder.addCase(updateBranchDetails.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updateBranchDetails.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.client = payload.client;
+      state.branches = payload.client.branches;
+      toast.success(payload.message);
+    });
+    builder.addCase(updateBranchDetails.rejected, (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload?.message || "Unable to get branch details");
     });
@@ -466,6 +543,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { setPayment, updatePaymentFields } = userSlice.actions;
+export const { setPayment, updatePaymentFields, setBranch, setClient } =
+  userSlice.actions;
 
 export default userSlice.reducer;

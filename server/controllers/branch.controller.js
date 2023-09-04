@@ -22,7 +22,8 @@ export const addBranch = asyncHandler(async (req, res) => {
   
   
   export const updateBranch = asyncHandler(async (req, res) => {
-    const { branchId } = req.params;
+    const { id:branchId } = req.params;
+    
     if (!mongoose.isValidObjectId(branchId)) {
       throw new Error('Invalid branchId', StatusCodes.BAD_REQUEST);
     }
@@ -33,8 +34,8 @@ export const addBranch = asyncHandler(async (req, res) => {
     const response = await Branch.findByIdAndUpdate(branchId,req.body,{
       runValidators : true
     })
-    const branches = await Branch.find({});
-    return res.status(StatusCodes.OK).json({message: `${branch.name} has been updated`,branches});
+    const client = await Client.findById(response.client).populate(["branches","payments"]);
+    return res.status(StatusCodes.OK).json({message: `${branch.name} details are  updated`,client});
   });
   
   

@@ -4,8 +4,11 @@ import React, { useState } from "react";
 import { Button, Card, Typography } from "@material-tailwind/react";
 import AddClient from "./AddClient";
 import { Link } from "react-router-dom";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import DeleteClientDialog from "./dialogs/DeleteClientDialog";
+import { setClient } from "../redux/userSlice";
+import { useDispatch } from "react-redux";
+import EditClient from "./EditClient";
 const TABLE_HEAD = [
   "Client ID",
   "Client Name",
@@ -25,10 +28,13 @@ const TABLE_HEAD = [
   "Actions",
 ];
 const ClientsTable = ({ data }) => {
+  const dispatch = useDispatch();
   const [openWarning, setOpenWarning] = React.useState(false);
   const handleOpenWarning = () => setOpenWarning(!openWarning);
 
-  //to display the client name in the dialog
+  const [openEdit, setOpenEdit] = React.useState(false);
+  const handleOpenEdit = () => setOpenEdit(!openEdit);
+
   const [clientName, setClientName] = useState("");
   const [clientId, setClientId] = useState("");
 
@@ -60,6 +66,7 @@ const ClientsTable = ({ data }) => {
                 (
                   {
                     _id,
+                    clientId,
                     name,
                     contact,
                     url,
@@ -82,7 +89,7 @@ const ClientsTable = ({ data }) => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {(_id && _id.substring(0, 6)) || "N/A"}
+                        {clientId }
                       </Typography>
                     </td>
                     <td className="p-4">
@@ -222,13 +229,20 @@ const ClientsTable = ({ data }) => {
                         <p className="flex items-center justify-center">NA</p>
                       )}
                     </td>
-                    <td>
+                    <td className="py-6 flex gap-4 items-center h-full ">
                       <TrashIcon
                         className="h-6 w-6 text-red-500 cursor-pointer hover:text-red-800 place-items-center ml-4"
                         onClick={() => {
                           setClientName(name),
                             setClientId(_id),
                             handleOpenWarning();
+                        }}
+                      />
+                      <PencilSquareIcon
+                        className="h-6 w-6 cursor-pointer"
+                        onClick={() => {
+                          dispatch(setClient({ id: _id }));
+                          handleOpenEdit();
                         }}
                       />
                     </td>
@@ -238,7 +252,9 @@ const ClientsTable = ({ data }) => {
             </tbody>
           </table>
         ) : (
-          <p className="font-bold text-center text-lg text-black">No records found</p>
+          <p className="font-bold text-center text-lg text-black">
+            No records found
+          </p>
         )}
       </Card>
 
@@ -248,6 +264,8 @@ const ClientsTable = ({ data }) => {
         clientName={clientName}
         id={clientId}
       />
+
+      <EditClient open={openEdit} handleOpen={handleOpenEdit} />
     </div>
   );
 };

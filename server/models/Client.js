@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 const ClientSchema = new mongoose.Schema(
   {
+    clientId: {
+      type: Number,
+      required: [true, "Client Id is required"],
+    },
     name: {
       type: String,
       required: [true, "Client Name is required"],
@@ -27,13 +31,13 @@ const ClientSchema = new mongoose.Schema(
       type: String,
       required: [true, "Has branches is required field"],
     },
-    paymentType : {
-      type : String,
-      required : [true,"Payment Type is required"]
+    paymentType: {
+      type: String,
+      required: [true, "Payment Type is required"],
     },
     amount: {
       type: Number,
-      required: [true, "Per student Amount is required"],
+      required: [true, "Amount is required"],
     },
     studentsCount: {
       type: Number,
@@ -61,15 +65,10 @@ ClientSchema.virtual("totalStrength").get(function () {
   );
 });
 
-
 ClientSchema.virtual("totalAmount").get(function () {
-  return (
-    this.paymentType === 'perStudent' ? (
-      this.amount * this.totalStrength
-    ) : (
-      this.amount * this.branchesCount
-    )
-  );
+  return this.paymentType === "perStudent"
+    ? this.amount * this.totalStrength
+    : this.amount * this.branchesCount;
 });
 
 ClientSchema.virtual("totalAmountPaid").get(function () {

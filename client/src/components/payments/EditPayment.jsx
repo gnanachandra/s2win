@@ -22,7 +22,7 @@ const EditPayment = ({ open, handleOpen }) => {
 
   return (
     <div>
-      <Dialog open={open} handler={handleOpen}>
+      <Dialog open={open} handler={handleOpen} size="xs">
         <DialogHeader>Fill payment details</DialogHeader>
         <DialogBody divider>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">

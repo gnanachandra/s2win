@@ -10,6 +10,7 @@ export const addPayment = asyncHandler(async (req, res) => {
   if (!client || !amount || !mode || !date) {
     throw new Error("Fill all details", StatusCodes.BAD_REQUEST);
   }
+  req.body.id = await Payment.countDocuments() + 1;
   const newPayment = await Payment.create(req.body);
   const data = await Client.findById(client).populate(["branches", "payments"]);
   return res.status(StatusCodes.OK).json({

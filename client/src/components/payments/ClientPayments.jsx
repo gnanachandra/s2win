@@ -31,7 +31,7 @@ const ClientPayments = () => {
         <p>Back to Home</p>
       </Link>
       <div className="flex flex-col gap-2">
-        <p className="text-lg">Client ID : {id}</p>
+        <p className="text-lg">Client ID : {client.id}</p>
         <p className="text-lg">Client Name : {client?.name}</p>
         <p className="text-lg">Client Contact : {client?.contact}</p>
       </div>

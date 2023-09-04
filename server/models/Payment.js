@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 const PaymentSchema = new mongoose.Schema({
+  id : {
+    type : Number,
+    required : [true,"Payment Id is required"]
+  },
   client: {
-    type: mongoose.SchemaTypes.ObjectId,
+    type : mongoose.SchemaTypes.ObjectId,
     ref: "Client",
     required: [true, "Client Details cannot be empty"],
   },

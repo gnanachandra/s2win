@@ -5,9 +5,10 @@ import {
   deleteClient,
   getClient,
   getClients,
+  updateClient,
 } from "../controllers/client.controller.js";
 
 router.route("/").get(getClients).post(addClient);
-router.route("/:id").get(getClient).delete(deleteClient);
+router.route("/:id").get(getClient).delete(deleteClient).patch(updateClient);
 
 export default router;

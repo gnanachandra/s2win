@@ -42,7 +42,7 @@ const PaymentsTable = ({ data, clientName }) => {
               </tr>
             </thead>
             <tbody>
-              {data?.map(({ _id, amount, mode, client, date }, index) => {
+              {data?.map(({ _id,id, amount, mode, client, date }, index) => {
                 const isLast = index === data?.length - 1;
                 const classes = isLast
                   ? "p-3 text-black"
@@ -52,7 +52,7 @@ const PaymentsTable = ({ data, clientName }) => {
                   <tr key={_id}>
                     <td className={classes}>
                       <Typography variant="small" className="font-normal">
-                        {_id}
+                        {id}
                       </Typography>
                     </td>
                     <td className={classes}>

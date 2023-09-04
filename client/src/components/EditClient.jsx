@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -9,26 +9,31 @@ import {
 } from "@material-tailwind/react";
 import { useForm } from "react-hook-form";
 import { Toaster, toast } from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { addClient } from "../redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { updateClient } from "../redux/userSlice";
 
-const AddClient = ({ open, handleOpen }) => {
+const EditClient = ({ open, handleOpen }) => {
+  const { client } = useSelector((state) => state["user"]);
   const form = useForm();
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
   const errorMessages = Object.values(errors);
-  const [hasBranches, setHasBranches] = useState("yes");
-  const [paymentType, setPaymentType] = useState("perStudent");
+  const [hasBranches, setHasBranches] = useState(client?.hasBranches);
+  const [paymentType, setPaymentType] = useState(client?.paymentType);
+
   if (errorMessages.length !== 0) {
     const obj1 = errorMessages[0];
     toast.error(errorMessages[0]?.message || Object.values(obj1)[0].message);
   }
+
   const dispatch = useDispatch();
-  const addnewClient = async (data) => {
+
+  const editClientDetails = async (data) => {
     console.log(data);
     data["hasBranches"] = hasBranches;
     data["paymentType"] = paymentType;
-    const response = await dispatch(addClient(data));
+    data["id"] = client?._id;
+    const response = await dispatch(updateClient(data));
     if (response.meta.requestStatus === "fulfilled") {
       toast.success(response.payload.message);
       handleOpen();
@@ -36,6 +41,11 @@ const AddClient = ({ open, handleOpen }) => {
       toast.error(response?.payload?.message || "Something went wrong");
     }
   };
+  useEffect(() => {
+    // Update the state when client data changes
+    setPaymentType(client?.paymentType);
+    setHasBranches(client?.hasBranches);
+  }, [client]);
   return (
     <div>
       <Dialog
@@ -44,14 +54,15 @@ const AddClient = ({ open, handleOpen }) => {
         size="sm"
         className="h-[36rem] overflow-auto"
       >
-        <DialogHeader>Add New Client</DialogHeader>
+        <DialogHeader>Edit client details</DialogHeader>
         <DialogBody divider>
           <form
-            onSubmit={handleSubmit(addnewClient)}
+            onSubmit={handleSubmit(editClientDetails)}
             className="flex flex-col gap-5"
           >
             <Input
               label="client name"
+              defaultValue={client?.name}
               {...register("name", {
                 required: {
                   value: true,
@@ -61,6 +72,7 @@ const AddClient = ({ open, handleOpen }) => {
             />
             <Input
               label="contact number"
+              defaultValue={client?.contact}
               {...register("contact", {
                 required: {
                   value: true,
@@ -80,6 +92,7 @@ const AddClient = ({ open, handleOpen }) => {
               })}
             />
             <Input
+              defaultValue={client?.url}
               label="client url"
               {...register("url", {
                 required: {
@@ -89,6 +102,7 @@ const AddClient = ({ open, handleOpen }) => {
               })}
             />
             <Input
+              defaultValue={client?.loginId}
               label="LoginId"
               {...register("loginId", {
                 required: {
@@ -98,6 +112,7 @@ const AddClient = ({ open, handleOpen }) => {
               })}
             />
             <Input
+              defaultValue={client?.password}
               label="Password"
               {...register("password", {
                 required: {
@@ -124,13 +139,13 @@ const AddClient = ({ open, handleOpen }) => {
                 value={"perBranch"}
                 checked={paymentType === "perBranch"}
                 disabled={hasBranches === "no"}
-                onClick={(e) => {setPaymentType(e.target.value)}}
+                onClick={(e) => setPaymentType(e.target.value)}
               />
               <label htmlFor="no">Per Branch</label>
             </div>
             <Input
-              label={paymentType + " Amount"}
-              defaultValue={0}
+              label={" Amount"}
+              defaultValue={client?.amount}
               onChange={(e) => console.log(e.target.value)}
               {...register("amount", {
                 required: {
@@ -167,14 +182,15 @@ const AddClient = ({ open, handleOpen }) => {
                 id="no"
                 value={"no"}
                 checked={hasBranches === "no"}
-                onClick={(e) => {setHasBranches(e.target.value);setPaymentType("perStudent")}}
+                disabled = {hasBranches === "yes"}
+                onClick={(e) => setHasBranches(e.target.value)}
               />
               <label htmlFor="no">No</label>
             </div>
             {hasBranches === "no" && (
               <Input
                 label="Students Count"
-                defaultValue={0}
+                defaultValue={client?.totalStrength}
                 {...register("studentsCount", {
                   required: {
                     value: true,
@@ -213,4 +229,4 @@ const AddClient = ({ open, handleOpen }) => {
   );
 };
 
-export default AddClient;
+export default EditClient;
