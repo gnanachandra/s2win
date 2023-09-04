@@ -24,7 +24,6 @@ const TABLE_HEAD = [
   "Amount Paid",
   "Branches",
   "Payments",
-  "Login",
   "Actions",
 ];
 const ClientsTable = ({ data }) => {
@@ -39,12 +38,12 @@ const ClientsTable = ({ data }) => {
   const [clientId, setClientId] = useState("");
 
   return (
-    <div>
-      <Card className="h-full w-full overflow-x-scroll lg:overflow-auto rounded-none shadow-none">
+    <>
+      <Card className="h-full w-full overflow-x-scroll lg:overflow-auto shadow-none">
         {data.length > 0 ? (
-          <table className="w-full min-w-max table-auto text-left border border-gray-700 mt-5">
-            <thead className="break-words">
-              <tr className="border border-gray-900">
+          <table className="w-full min-w-max table-auto text-left ">
+            <thead className="break-words text-black">
+              <tr className="">
                 {TABLE_HEAD.map((head) => (
                   <th
                     key={head}
@@ -52,8 +51,8 @@ const ClientsTable = ({ data }) => {
                   >
                     <Typography
                       variant="small"
-                      className="text-black font-bold text-lg leading-none opacity-70"
-                      style={{ wordBreak: "break-all" }}
+                      className="text-black font-bold text-lg"
+                      
                     >
                       {head}
                     </Typography>
@@ -82,14 +81,14 @@ const ClientsTable = ({ data }) => {
                   },
                   index
                 ) => (
-                  <tr key={name} className="even:bg-blue-gray-50/50">
+                  <tr key={name} className="even:bg-blue-gray-50/50 text-black">
                     <td className="p-4">
                       <Typography
                         variant="small"
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {clientId }
+                        {clientId}
                       </Typography>
                     </td>
                     <td className="p-4">
@@ -116,7 +115,18 @@ const ClientsTable = ({ data }) => {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {url}
+                        {hasBranches === "no" ? (
+                          <a
+                            href={url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="cursor-pointer underline"
+                          >
+                            {url}
+                          </a>
+                        ) : (
+                          <p> {url}</p>
+                        )}
                       </Typography>
                     </td>
                     <td className="p-4">
@@ -218,7 +228,7 @@ const ClientsTable = ({ data }) => {
                         </Button>
                       </Link>
                     </td>
-                    <td className="p-4 ">
+                    {/* <td className="p-4 ">
                       {hasBranches === "no" ? (
                         <a href={url} target="_blank" rel="noreferrer">
                           <Button className="bg-cyan-700 p-3 hover:shadow-cyan-600 hover:shadow-sm">
@@ -228,7 +238,7 @@ const ClientsTable = ({ data }) => {
                       ) : (
                         <p className="flex items-center justify-center">NA</p>
                       )}
-                    </td>
+                    </td> */}
                     <td className="py-6 flex gap-4 items-center h-full ">
                       <TrashIcon
                         className="h-6 w-6 text-red-500 cursor-pointer hover:text-red-800 place-items-center ml-4"
@@ -252,7 +262,7 @@ const ClientsTable = ({ data }) => {
             </tbody>
           </table>
         ) : (
-          <p className="font-bold text-center text-lg text-black">
+          <p className="font-bold text-center text-lg text-black mt-5">
             No records found
           </p>
         )}
@@ -266,7 +276,7 @@ const ClientsTable = ({ data }) => {
       />
 
       <EditClient open={openEdit} handleOpen={handleOpenEdit} />
-    </div>
+    </>
   );
 };
 

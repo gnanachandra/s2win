@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "./Loading";
 import { getClients } from "../redux/userSlice";
-import { Button, Input } from "@material-tailwind/react";
+import { Button, Card, CardBody, Input } from "@material-tailwind/react";
 import AddClient from "./AddClient";
 import DeleteClientDialog from "./dialogs/DeleteClientDialog";
 import ClientsTable from "./ClientsTable";
@@ -28,7 +28,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="p-4 md:p-10">
+      <div className="p-4 md:px-10">
         <div className="flex items-center justify-between mt-2">
           <h1 className="text-black text-center font-bold text-lg lg:text-xl">
             Clients Details
@@ -49,14 +49,24 @@ const Home = () => {
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
-        <div className="flex flex-wrap gap-2 lg:flex-row justify-between mt-4">
-          <p className="font-semibold">Total Students : {data["totalStrength"]} </p>
-          <p className="font-semibold">Total Amount : {formatIndianNumber(data["allClientsAmount"]).toLocaleString()}</p>
-          <p className="font-semibold">Amount Paid : {formatIndianNumber(data["amountPaid"]).toLocaleString()}</p>
+        <div className="flex flex-wrap gap-2 lg:flex-row justify-between mt-6">
+          <p className="font-semibold">
+            Total Students : {data["totalStrength"]}{" "}
+          </p>
+          <p className="font-semibold">
+            Total Amount :{" "}
+            {formatIndianNumber(data["allClientsAmount"]).toLocaleString()}
+          </p>
+          <p className="font-semibold">
+            Amount Paid :{" "}
+            {formatIndianNumber(data["amountPaid"]).toLocaleString()}
+          </p>
         </div>
-        <div>
-          <ClientsTable data={searchClients(query, clients)} />
-        </div>
+        <Card className="mt-6">
+          <CardBody className="p-0 mx-0">
+            <ClientsTable data={searchClients(query, clients)} />
+          </CardBody>
+        </Card>
       </div>
       <AddClient open={openAddClient} handleOpen={handleOpenAddClient} />
     </>

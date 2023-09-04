@@ -28,10 +28,10 @@ const Payments = () => {
     return <Loading />;
   }
   return (
-    <div className="p-4 md:p-10">
+    <div className="p-4 md:px-10">
       <Card className="h-full w-full shadow-none">
         <CardHeader floated={false} shadow={false} className="rounded-none">
-          <Link to="/" className="flex items-center cursor-pointer mb-5 gap-2">
+        <Link to="/" className="flex items-center cursor-pointer mb-5 gap-2 shadow-md w-fit p-2 rounded-md bg-gray-200">
             <ArrowLeftIcon className="h-6 w-6" />
             <p>Back to Home</p>
           </Link>

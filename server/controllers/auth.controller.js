@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import { StatusCodes } from "http-status-codes";
 import User from "../models/User.js";
 
-export const login = asyncHandler(async (req, res) => {
+export const  login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     throw new Error("Enter all details", StatusCodes.BAD_REQUEST);
